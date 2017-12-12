@@ -27,13 +27,13 @@ mod_ssl:
     - watch_in:
       - module: apache-restart
 
-{% if 'ssl' in apache and apache.ssl.get('config_source', False) != False %}
+{% if salt['pillar.get']('apache:ssl:config_source', '') != '' %}
 mod_ssl_config:
   file.managed:
     - name: /etc/httpd/conf.d/ssl.conf
-    - source: {{ apache.ssl.get('config_source') }}
-    {% if apache.ssl.get('config_source_template', False) != False %}
-    - template: {{ apache.ssl.get('config_source_template') }}
+    - source: {{ salt['pillar.get']('apache:ssl:config_source') }}
+    {% if salt['pillar.get']('apache:ssl:config_source_template', '') != '' %}
+    - template: {{ salt['pillar.get']('apache:ssl:config_source_template') }}
     {% endif %}
     - require:
       - pkg: mod_ssl
