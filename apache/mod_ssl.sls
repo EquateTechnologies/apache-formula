@@ -17,6 +17,9 @@ a2enmod mod_ssl:
 
 {% elif grains['os_family']=="RedHat" %}
 
+include:
+  - apache
+
 mod_ssl:
   pkg.installed:
     - require:
