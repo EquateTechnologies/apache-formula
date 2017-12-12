@@ -27,6 +27,20 @@ mod_ssl:
     - watch_in:
       - module: apache-restart
 
+{% if apache.get('ssl:config_source', False) != False %}
+mod_ssl_config:
+  file.managed:
+    - name: /etc/httpd/conf.d/ssl.conf
+    - source: {{ apache.get('ssl:config_source') }}
+    {% if apache.get('ssl:config_source_template', False) != False %}
+    - template: {{ apache.get('ssl:config_source_template') }}
+    {% endif %}
+    - require:
+      - pkg: mod_ssl
+    - watch_in:
+      - module: apache-restart
+{% endif %}
+
 {% elif grains['os_family']=="FreeBSD" %}
 
 include:
